@@ -1,4 +1,6 @@
 name: Daily Auto Commit
+permissions:
+  contents: write
 
 on:
   schedule:
