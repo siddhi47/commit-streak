@@ -36,5 +36,6 @@ jobs:
         env:
           TOKEN: ${{ secrets.PAT_TOKEN }}
         run: |
+          echo ${TOKEN}
           git remote set-url origin https://x-access-token:${TOKEN}@github.com/siddhi47/commit-streak.git
           git push
