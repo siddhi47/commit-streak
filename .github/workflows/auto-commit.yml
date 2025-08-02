@@ -8,18 +8,18 @@ on:
 jobs:
   auto-commit:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Read and increment daily counter
-        id: update_counter
         run: |
           FILE="activity.txt"
           if [ ! -f "$FILE" ]; then
             echo "Day Count: 1" > $FILE
           else
-            COUNT=$(grep -oP '^Day Count: \K\d+' $FILE)
+            COUNT=$(grep -oP '^Day Count: \K\d+' $FILE || echo 0)
             COUNT=$((COUNT + 1))
             sed -i "s/^Day Count:.*/Day Count: $COUNT/" $FILE
           fi
@@ -27,8 +27,14 @@ jobs:
 
       - name: Commit changes
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "siddhi47"
+          git config user.email "siddhikiran.bajracharya@gmail.com"
           git add activity.txt
           git commit -m "📈 Day $(grep -oP '^Day Count: \K\d+' activity.txt): Daily commit" || echo "No changes to commit"
+
+      - name: Push changes using PAT
+        env:
+          TOKEN: ${{ secrets.PAT_TOKEN }}
+        run: |
+          git remote set-url origin https://x-access-token:${TOKEN}@github.com/siddhi47/commit-streak.git
           git push
